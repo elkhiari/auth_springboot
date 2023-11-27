@@ -3,13 +3,15 @@ package com.eclipse.blogging.controllers;
 import com.eclipse.blogging.controllers.auth.AuthentificationResponse;
 import com.eclipse.blogging.controllers.auth.LoginRequest;
 import com.eclipse.blogging.controllers.auth.RegisterRequest;
+import com.eclipse.blogging.entities.User;
 import com.eclipse.blogging.services.AuthServices;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,7 +21,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthentificationResponse> register(
-            @RequestBody RegisterRequest request
+           @Valid @RequestBody RegisterRequest request
     ) {
         return ResponseEntity.ok(authServices.register(request));
     }

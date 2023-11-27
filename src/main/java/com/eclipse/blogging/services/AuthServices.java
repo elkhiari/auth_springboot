@@ -6,15 +6,13 @@ import com.eclipse.blogging.controllers.auth.LoginRequest;
 import com.eclipse.blogging.controllers.auth.RegisterRequest;
 import com.eclipse.blogging.entities.User;
 import com.eclipse.blogging.enums.Role;
+import com.eclipse.blogging.exception.EmailExistsException;
 import com.eclipse.blogging.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +39,10 @@ public class AuthServices {
     }
 
     public AuthentificationResponse register(RegisterRequest request) {
+        var existEmail = userRepository.findByEmail(request.getEmail());
+        if (existEmail.isPresent()) {
+            throw new EmailExistsException("");
+        }
         var user = User.builder()
                 .lastname(request.getLastname())
                 .firstname(request.getFirstname())
